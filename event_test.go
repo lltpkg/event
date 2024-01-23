@@ -107,3 +107,56 @@ func TestConcurrentFireEvent(t *testing.T) {
 		t.Error("Event channel is not closed after cleanup")
 	}
 }
+
+func TestMultiEventChannelForSingleEvent(t *testing.T) {
+	// Arrange
+	evName := "testEvent1"
+	data := "testData1"
+	numListeners := 30
+	var wg sync.WaitGroup
+
+	// Act
+	evChan1, cleanup1 := EventChannel(evName)
+	evChan2, cleanup2 := EventChannel(evName)
+
+	for i := 0; i < numListeners; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			FireEvent(evName, data)
+		}()
+	}
+
+	// Assert
+	// Wait for all goroutines to finish
+	wg.Wait()
+
+	// Check that data is received on the channel for each listener
+	for i := 0; i < numListeners; i++ {
+		receivedData1 := <-evChan1
+		if receivedData1 != data {
+			t.Errorf("Expected data %v, but received %v", data, receivedData1)
+		}
+
+		receivedData2 := <-evChan2
+		if receivedData2 != data {
+			t.Errorf("Expected data %v, but received %v", data, receivedData2)
+		}
+	}
+
+	// Cleanup
+	cleanup1()
+	cleanup2()
+
+	// Assert
+	// Check that the channels are closed after cleanup
+	_, ok1 := <-evChan1
+	if ok1 {
+		t.Error("Event channel 1 is not closed after cleanup")
+	}
+
+	_, ok2 := <-evChan2
+	if ok2 {
+		t.Error("Event channel 2 is not closed after cleanup")
+	}
+}
