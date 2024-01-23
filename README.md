@@ -25,7 +25,7 @@ func main() {
 		data := "World"
 		event.FireEvent(evName, data)
 	}()
-	evChan, unSub := event.EventChanel(evName)
+	evChan, unSub := event.EventChannel(evName)
 	defer unSub()
 	receivedData := <-evChan
 	fmt.Println("Hello,", receivedData)
@@ -37,11 +37,11 @@ func main() {
 
 ### Creating Events and Listeners
 
-The package allows you to create named events and associate listeners with them. Use the EventChanel function to create an event channel and associate a cleanup function with it:
+The package allows you to create named events and associate listeners with them. Use the EventChannel function to create an event channel and associate a cleanup function with it:
 
 ```go
 // Create an event channel(listener) for "exampleEvent"
-eventChan, cleanup := event.EventChanel("exampleEvent")
+eventChan, cleanup := event.EventChannel("exampleEvent")
 // Cleanup resources when done
 defer cleanup()
 

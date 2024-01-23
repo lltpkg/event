@@ -5,13 +5,13 @@ import (
 	"testing"
 )
 
-func TestEventChanelAndFireEvent(t *testing.T) {
+func TestEventChannelAndFireEvent(t *testing.T) {
 	// Arrange
 	evName := "testEvent"
 	data := "testData"
 
 	// Act
-	evChan, cleanup := EventChanel(evName)
+	evChan, cleanup := EventChannel(evName)
 
 	// Assert
 	// Check that the channel is not nil
@@ -25,7 +25,7 @@ func TestEventChanelAndFireEvent(t *testing.T) {
 	evManager.Mt.Unlock()
 
 	if group == nil {
-		t.Error("Event group not registered for EventChanel")
+		t.Error("Event group not registered for EventChannel")
 	}
 
 	// Act
@@ -75,7 +75,7 @@ func TestConcurrentFireEvent(t *testing.T) {
 	var wg sync.WaitGroup
 
 	// Act
-	evChan, cleanup := EventChanel(evName)
+	evChan, cleanup := EventChannel(evName)
 
 	for i := 0; i < numListeners; i++ {
 		wg.Add(1)

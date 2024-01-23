@@ -1,12 +1,12 @@
 package event
 
-func EventChanel(evName string) (chan interface{}, func()) {
-	evChan := make(chan interface{})
-	evMan := newEvent(evName).addListenerChan(evChan)
-	return evChan, func() {
+func EventChannel(evName string) (eventChannel chan interface{}, unsubscribe func()) {
+	eventChannel = make(chan interface{})
+	evMan := newEvent(evName).addListenerChan(eventChannel)
+	return eventChannel, func() {
 		// cleanup
-		evMan.rmListeningChan(evChan)
-		close(evChan)
+		evMan.rmListeningChan(eventChannel)
+		close(eventChannel)
 	}
 }
 

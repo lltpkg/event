@@ -12,7 +12,7 @@ func main() {
 		data := "World"
 		event.FireEvent(evName, data)
 	}()
-	evChan, unSub := event.EventChanel(evName)
+	evChan, unSub := event.EventChannel(evName)
 	defer unSub()
 	receivedData := <-evChan
 	fmt.Println("Hello,", receivedData)
